@@ -87,9 +87,17 @@ apparent inconsistency.
 ## Testing
 
 - Nothing needed only for development, such as tests, test-only dependencies, or
-  benchmarks, may appear in the dependency graph a downstream consumer resolves. That is why
-  the suite is its own package in `test/`, requiring the two shipping packages by path, and why
-  the root lakefile carries a `@[test_driver]` script that runs it as a child process.
+  benchmarks, may appear in the dependency graph a downstream consumer resolves.
+- Tests should be in a subproject called `test` with its own lakefile, which requires
+  the root package by path. The root lakefile carries a `@[test_driver]` script that
+  runs the subproject's tests as a child process:
+
+      @[test_driver]
+      script tests do
+        let child ← IO.Process.spawn
+          { cmd := "lake", args := #["test"], cwd := __dir__ / "test" }
+        child.wait
+
 - Don't write tests which wholely or largely restate literals from the source with no
   computation in between. Before adding a test, ask: could this fail from a real behavior
   regression, or only by retyping the expected value wrong? If only the latter, it's
@@ -97,6 +105,9 @@ apparent inconsistency.
 - Don't write tests which validate the functionality of dependencies unless explicitly
   asked to do so, or we have evidence that the dependency has a bug or unexpected
   behaviour. Assume that dependencies do what they claim to do.
+- Don't write UI tests which check HTML structure. Tests like this are too fragile.
+  When testing the UI abstract away from the precise HTML structure wherever possible
+  so that they continue to work as the UI evolves.
 - When creating new code or functionality, always generate tests alongside it, as long
   as those tests comply with the rules above.
 - Prefer the strongest form of test a claim admits: a proven theorem over a property
