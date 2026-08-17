@@ -1,0 +1,34 @@
+name: Lean Action CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      # Builds `AwsLambda` and runs the suite, which lives in `test/` and is reached through the
+      # root package's test driver. Building the suite is what pulls in `AwsLambdaHttp`.
+      - uses: leanprover/lean-action@v1
+
+      # Building the HTTP layer on its own asserts something the suite cannot: that it needs
+      # nothing the test package happens to provide, and so is usable by a consumer that requires
+      # it alone.
+      - name: Build the HTTP layer standalone
+        run: lake build
+        working-directory: http
+
+      # Neither library may depend on anything native, which is most of why a function that serves
+      # something other than HTTP can be built without a C toolchain. No step above installs a
+      # system package, so a dependency that needed one would fail here rather than at a consumer.
+      - name: Check the runtime layer stays free of Std.Http and middleware
+        run: |
+          if grep -rnE "^\s*(public\s+)?(meta\s+)?import (Std\.Http|Middleware)" AwsLambda AwsLambda.lean; then
+            echo "::error::AwsLambda must not depend on Std.Http or middleware; that belongs in http/"
+            exit 1
+          fi

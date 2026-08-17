@@ -1,0 +1,2 @@
+# Unanchored: there is a build directory under each of the three packages, not just this one.
+.lake/

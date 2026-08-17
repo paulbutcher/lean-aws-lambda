@@ -1,0 +1,32 @@
+/-
+Copyright (c) 2026 Paul Butcher. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+-/
+
+namespace AwsLambda
+
+private def hexDigit? (c : Char) : Option UInt8 :=
+  if '0' ≤ c ∧ c ≤ '9' then some (UInt8.ofNat (c.toNat - '0'.toNat))
+  else if 'a' ≤ c ∧ c ≤ 'f' then some (UInt8.ofNat (c.toNat - 'a'.toNat + 10))
+  else if 'A' ≤ c ∧ c ≤ 'F' then some (UInt8.ofNat (c.toNat - 'A'.toNat + 10))
+  else none
+
+private def hexPairs : List Char → Option (List UInt8)
+  | [] => some []
+  | high :: low :: rest => do
+    let high ← hexDigit? high
+    let low ← hexDigit? low
+    let rest ← hexPairs rest
+    some ((high * 16 + low) :: rest)
+  | _ => none
+
+/-- Decodes an even-length run of hex digits.
+
+Hex is what a secret shared between concurrently running instances of a function tends to arrive
+as. `AWS::SecretsManager::Secret`'s generator can be confined to the hex alphabet exactly, but it
+cannot be made to emit the padding base64 needs to land on a key of a precise length, so a key
+generated there and read back here has to travel this way. -/
+def ofHex? (s : String) : Option ByteArray :=
+  (hexPairs s.toList).map fun bytes => ⟨bytes.toArray⟩
+
+end AwsLambda
