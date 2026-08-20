@@ -11,7 +11,7 @@ open Lake DSL
 queue or a schedule or a bucket notification, needs neither `Std.Http` nor a middleware stack to
 build. Everything HTTP-shaped lives here; the runtime API lives there. -/
 package «awsLambda-http» where
-  version := v!"0.1.0"
+  version := v!"0.2.0"
 
 require awsLambda from ".."
 
