@@ -10,7 +10,6 @@ import Tests.Harness
 namespace Tests
 
 open AwsLambda.Http
-open Lean (Json)
 open Std Async
 open Std Http
 open Std Http Server
@@ -29,7 +28,7 @@ private def spoofedEvent : String :=
   "\"body\":\"title=Buy+milk\",\"isBase64Encoded\":false}"
 
 private def parseEvent (text : String) : Except String Event := do
-  Event.ofJson (← Json.parse text)
+  Event.ofJson (← (Json.parse text).mapError toString)
 
 private def headerOf (text : String) (name : String) : Option String := do
   let event := (parseEvent text).toOption

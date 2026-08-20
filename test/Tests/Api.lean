@@ -9,7 +9,6 @@ import Tests.Harness
 namespace Tests
 
 open AwsLambda
-open Lean (Json)
 open Std Async
 
 /-- Reads one HTTP request off `client`: the head, then as much body as its `Content-Length`

@@ -3,11 +3,10 @@ Copyright (c) 2026 Paul Butcher. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
-import Lean.Data.Json
+import Json
 import Middleware
 import Std.Http.Server
 
-open Lean (Json)
 open Std Async
 open Std Http
 open Std Http Server
@@ -36,10 +35,10 @@ namespace Event
 
 private def stringFields (j : Json) : Array (String × String) :=
   match j with
-  | .obj kvs => kvs.foldl (init := #[]) fun acc k v =>
-    match v with
-    | .str s => acc.push (k, s)
-    | _ => acc
+  | .obj fields => fields.filterMap fun (name, value) =>
+    match value with
+    | .str s => some (name, s)
+    | _ => none
   | _ => #[]
 
 private def strings (j : Json) : Array String :=

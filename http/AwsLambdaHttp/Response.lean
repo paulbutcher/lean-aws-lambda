@@ -3,11 +3,10 @@ Copyright (c) 2026 Paul Butcher. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
-import Lean.Data.Json
+import Json
 import Middleware
 import Std.Http.Server
 
-open Lean (Json)
 open Std Async
 open Std Http
 open Std Http Server
@@ -72,7 +71,7 @@ def responseToJson (options : Options) (response : Response Body.Any) :
       | some text => (text, false)
       | none => (Middleware.Crypto.Base64.encode bytes, true)
     pure <| .ok <| Json.mkObj [
-      ("statusCode", Json.num response.line.status.toCode.toNat),
+      ("statusCode", Json.ofNat response.line.status.toCode.toNat),
       ("headers", Json.mkObj headers),
       ("cookies", Json.arr (cookies.map Json.str)),
       ("body", Json.str body),

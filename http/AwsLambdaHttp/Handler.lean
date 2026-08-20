@@ -7,7 +7,6 @@ import AwsLambda
 import AwsLambdaHttp.Event
 import AwsLambdaHttp.Response
 
-open Lean (Json)
 open Std Async
 open Std Http Server
 

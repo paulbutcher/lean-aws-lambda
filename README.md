@@ -16,8 +16,6 @@ Two packages, so that a function which is not serving HTTP does not have to buil
 ```lean
 import AwsLambda
 
-open Lean (Json)
-
 def main : IO Unit := AwsLambda.serve do
   pure fun event => do
     let name := (event.getObjVal? "name" >>= Json.getStr?).toOption.getD "world"
@@ -74,5 +72,5 @@ process exits and Lambda replaces the environment rather than spinning.
 
 ## Prerequisites
 
-`awsLambda-http` requires [lean-middleware](https://github.com/paulbutcher/lean-middleware) for
-base64 and the `set-cookie` header name. `awsLambda` requires nothing beyond Lean and `Std`.
+`awsLambda` requires [lean-json](https://github.com/paulbutcher/lean-json). `awsLambda-http`
+additionally requires [lean-middleware](https://github.com/paulbutcher/lean-middleware).

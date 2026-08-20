@@ -10,6 +10,9 @@ open Lake DSL
 package awsLambda where
   version := v!"0.1.0"
 
+require json from git
+  "https://github.com/paulbutcher/lean-json" @ "v0.1.0"
+
 @[default_target]
 lean_lib AwsLambda
 
