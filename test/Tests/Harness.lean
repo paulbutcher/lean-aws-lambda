@@ -3,6 +3,10 @@ Copyright (c) 2026 Paul Butcher. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
+module
+
+public section
+
 namespace Tests
 
 def checkEq [BEq α] [Repr α] (label : String) (expected actual : α) : IO Unit :=

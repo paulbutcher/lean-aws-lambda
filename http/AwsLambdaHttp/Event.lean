@@ -3,9 +3,13 @@ Copyright (c) 2026 Paul Butcher. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
-import Json
-import Middleware
-import Std.Http.Server
+module
+
+public import Json
+public import Middleware
+public import Std.Http.Server
+
+public section
 
 open Std Async
 open Std Http
@@ -81,7 +85,7 @@ def ofJson (j : Json) : Except String Event := do
   pure { method, rawPath, rawQueryString, headers, cookies, sourceIp, body }
 
 /-- Names `requestHeaders` sets itself, and therefore ignores in the event's header map. -/
-def isAdapterOwned (name : String) : Bool :=
+@[expose] def isAdapterOwned (name : String) : Bool :=
   let name := name.toLower
   name == "cookie" || name == "x-forwarded-for" || name == "x-forwarded-proto"
 
@@ -105,7 +109,7 @@ to be conditional instead.
 
 A header the event carries that `Headers.insert?` rejects is dropped rather than failing the
 whole request, matching what the server itself would have done with it off a socket. -/
-def requestHeaders (event : Event) : Headers :=
+@[expose] def requestHeaders (event : Event) : Headers :=
   let fromEvent := event.headers.foldl (init := Headers.empty) fun headers (name, value) =>
     if isAdapterOwned name then headers else (headers.insert? name value).getD headers
   let withCookies :=

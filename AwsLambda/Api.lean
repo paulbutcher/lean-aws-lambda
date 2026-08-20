@@ -3,9 +3,13 @@ Copyright (c) 2026 Paul Butcher. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
-import Json
-import Std.Async.TCP
-import Std.Net.Addr
+module
+
+public import Json
+public import Std.Async.TCP
+public import Std.Net.Addr
+
+public section
 
 open Std Async
 
