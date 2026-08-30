@@ -16,7 +16,7 @@ package «awsLambda-http» where
 require awsLambda from ".."
 
 require middleware from git
-  "https://github.com/paulbutcher/lean-middleware" @ "v0.6.0"
+  "https://github.com/paulbutcher/lean-middleware" @ "v0.12.0"
 
 /-- The module root is `AwsLambdaHttp` rather than `AwsLambda.Http` because Lake resolves a module
 name to exactly one package, and the `AwsLambda.*` tree already belongs to `awsLambda`. The Lean
