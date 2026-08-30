@@ -8,7 +8,7 @@ import Lake
 open Lake DSL
 
 package awsLambda where
-  version := v!"0.3.0"
+  version := v!"0.4.0"
   leanOptions := #[⟨`warningAsError, true⟩]
 
 require json from git
