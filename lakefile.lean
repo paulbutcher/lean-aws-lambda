@@ -9,6 +9,7 @@ open Lake DSL
 
 package awsLambda where
   version := v!"0.3.0"
+  leanOptions := #[⟨`warningAsError, true⟩]
 
 require json from git
   "https://github.com/paulbutcher/lean-json" @ "v0.2.0"

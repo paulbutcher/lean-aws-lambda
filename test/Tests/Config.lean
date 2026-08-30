@@ -20,7 +20,10 @@ open AwsLambda
 #guard (ofHex? "zz").isNone
 
 -- A generator confined to the hex alphabet has to be asked for twice the byte count it is meant to
--- produce, so the relationship a caller depends on when sizing a key is worth pinning down.
+-- produce, so the relationship a caller depends on when sizing a key is worth pinning down. An
+-- example rather than a theorem: `ofHex?` is defined over `hexPairs`, which is `private`, so
+-- nothing outside that module can unfold it, and stating this as a theorem would mean exporting a
+-- helper for a proof's sake.
 #guard (ofHex? (String.ofList (List.replicate 64 'a'))).map (·.size) == some 32
 
 end Tests

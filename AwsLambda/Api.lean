@@ -100,9 +100,8 @@ private def readToEnd (socket : TCP.Socket.Client) (buffered : ByteArray) : Api 
     | some chunk => acc := acc ++ chunk
   pure acc
 
-private def readBody (socket : TCP.Socket.Client) (buffered : ByteArray) (length : Option Nat) :
+private def readBody (socket : TCP.Socket.Client) (buffered : ByteArray) (length : Nat) :
     Api ByteArray := do
-  let some length := length | readToEnd socket buffered
   let mut acc := buffered
   let mut closed := false
   while acc.size < length do
@@ -225,7 +224,12 @@ private def request (endpoint : Endpoint) (method path : String) (body : Option 
     if chunked then
       readChunked socket rest
     else
-      readBody socket rest ((header "content-length").bind (·.toNat?))
+      match header "content-length" with
+      | none => readToEnd socket rest
+      | some announced =>
+        match announced.toNat? with
+        | some length => readBody socket rest length
+        | none => throw s!"the runtime API announced an unreadable content-length: {announced}"
   pure { status, headers, body }
 
 /-- An invocation, paired with the id every subsequent call about it has to quote. -/

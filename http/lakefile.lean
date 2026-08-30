@@ -12,6 +12,7 @@ queue or a schedule or a bucket notification, needs neither `Std.Http` nor a mid
 build. Everything HTTP-shaped lives here; the runtime API lives there. -/
 package «awsLambda-http» where
   version := v!"0.3.0"
+  leanOptions := #[⟨`warningAsError, true⟩]
 
 require awsLambda from ".."
 

@@ -65,14 +65,26 @@ private def methodOf (text : String) : Option Method := do
 
 #guard methodOf spoofedEvent == some .post
 
-/-- No value the caller puts in the event's header map can reach the handler under a name the
-adapter sets for itself. Stated over an arbitrary trailing header because that is the shape of
-the attack: `x-forwarded-for` arrives already truncated by the function URL to the single,
-caller-chosen entry that `Middleware.forwardedRemoteAddr` would otherwise read back. -/
-theorem requestHeaders_ignores_client_values (event : Event) (name value : String)
+/-- A caller cannot reach the three headers the adapter sets for itself by putting them in the
+event's own header map. That is what makes `X-Forwarded-For` worth trusting downstream: it is the
+address a rate limit, an audit line or an access decision is attributed to, and a function URL has
+already truncated the client's own copy to the single entry the caller chose, so a value that
+survived into `requestHeaders` would be one the caller picked for itself.
+
+`Event.isAdapterOwned name` answers `true` for exactly `cookie`, `x-forwarded-for` and
+`x-forwarded-proto`, compared after lowercasing, so `owned` says `(name, value)` is a header the
+adapter sets. `before` and `after` are arbitrary, which puts that pair at an arbitrary position in
+the event's header array rather than only at its end, and `event` is otherwise unconstrained. The
+equation then says the headers the handler sees are the same whether the pair is spliced in or left
+out, which is what the first paragraph calls unreachable. No argument makes this vacuous: `owned`
+is satisfied by each of the three names, and `before` and `after` may be empty but need not be.
+What the adapter puts under those names, `sourceIp` and `https` rather than merely something of its
+own, is pinned down by the guards above and not proved here. -/
+theorem requestHeaders_ignores_client_values (event : Event)
+    (before after : Array (String × String)) (name value : String)
     (owned : Event.isAdapterOwned name) :
-    Event.requestHeaders { event with headers := event.headers.push (name, value) }
-      = Event.requestHeaders event := by
+    Event.requestHeaders { event with headers := before ++ #[(name, value)] ++ after }
+      = Event.requestHeaders { event with headers := before ++ after } := by
   simp [Event.requestHeaders, owned]
 
 private def versionOf (version : String) : String :=

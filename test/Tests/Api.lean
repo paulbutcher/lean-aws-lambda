@@ -230,6 +230,16 @@ private def testNextRejectsMalformedJson : IO Unit := do
   if let .ok _ := result then
     throw (IO.userError "expected a malformed event to be rejected")
 
+/-- A `Content-Length` that is not a number leaves the response unframed. Reading to the end of the
+connection instead would treat a runtime API that announced a broken length exactly like one that
+announced none, and hand the handler whatever body that produced. -/
+private def testNextRejectsUnreadableContentLength : IO Unit := do
+  let reply := "HTTP/1.1 200 OK\r\n" ++ s!"Lambda-Runtime-Aws-Request-Id: {requestId}\r\n" ++
+    "Content-Length: not-a-number\r\n\r\n" ++ event
+  let (result, _) ← fetchNext [bytes reply]
+  if let .ok _ := result then
+    throw (IO.userError "expected an unreadable content-length to be rejected")
+
 /-- What the adapter puts on the wire when it answers, checked against the runtime API contract:
 the id has to appear in the path, since that is the only thing tying a response to its invocation,
 and the payload has to be the response document rather than anything wrapping it. -/
@@ -262,6 +272,7 @@ def runApiTests : IO Unit := do
   testNextWithSplitHead
   testNextRejectsMissingRequestId
   testNextRejectsMalformedJson
+  testNextRejectsUnreadableContentLength
   testPostResponseSendsThePayload
   testPostErrorReportsAgainstTheInvocation
 

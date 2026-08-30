@@ -37,15 +37,9 @@ Payload format **2.0** only, which is what a Lambda function URL and an API Gate
 
 Three request headers are set by the adapter rather than taken from the event:
 
-- **`Cookie`** is rebuilt from the event's `cookies` array. Format 2.0 delivers request cookies
-  there and omits the header, so without this a handler sees no cookies at all and every session
-  lookup and anti-forgery check fails.
-- **`X-Forwarded-For`** is set from `requestContext.http.sourceIp`, discarding what the client sent.
-  A function URL truncates `x-forwarded-for` to its leftmost entry, which is the entry the *client*
-  controls, so passing it through would hand `Middleware.forwardedRemoteAddr` an address the caller
-  chose for itself.
-- **`X-Forwarded-Proto`** is always `https`. Neither supported trigger has a plaintext listener, and
-  `Middleware.requestOrigin` assumes `http` when nothing says otherwise.
+- **`Cookie`** is rebuilt from the event's `cookies` array. Format 2.0 delivers request cookies there and omits the header, so without this a handler sees no cookies at all and every session lookup and anti-forgery check fails.
+- **`X-Forwarded-For`** is set from `requestContext.http.sourceIp`, discarding what the client sent. A function URL truncates `x-forwarded-for` to its leftmost entry, which is the entry the *client* controls, so passing it through would hand `Middleware.forwardedRemoteAddr` an address the caller chose for itself.
+- **`X-Forwarded-Proto`** is always `https`. Neither supported trigger has a plaintext listener, and `Middleware.requestOrigin` assumes `http` when nothing says otherwise.
 
 `Set-Cookie` headers are moved into the payload's `cookies` array.
 
@@ -57,8 +51,7 @@ Failures are reported through `AwsLambda.Options.onFailure`. The default writes 
 AwsLambda.serve init { onFailure := fun f => myTelemetry.record f }
 ```
 
-`Failure.next` is fatal: nothing can be reported against an invocation that never arrived, so the
-process exits and Lambda replaces the environment rather than spinning.
+`Failure.next` is fatal: nothing can be reported against an invocation that never arrived, so the process exits and Lambda replaces the environment rather than spinning.
 
 ## Response size
 
@@ -72,5 +65,4 @@ process exits and Lambda replaces the environment rather than spinning.
 
 ## Prerequisites
 
-`awsLambda` requires [lean-json](https://github.com/paulbutcher/lean-json). `awsLambda-http`
-additionally requires [lean-middleware](https://github.com/paulbutcher/lean-middleware).
+`awsLambda` requires [lean-json](https://github.com/paulbutcher/lean-json). `awsLambda-http` additionally requires [lean-middleware](https://github.com/paulbutcher/lean-middleware).

@@ -12,6 +12,7 @@ it: Lake resolves requirements transitively, so anything they required would be 
 every application that used them. -/
 package «awsLambda-tests» where
   testDriver := "tests"
+  leanOptions := #[⟨`warningAsError, true⟩]
 
 require awsLambda from ".."
 
