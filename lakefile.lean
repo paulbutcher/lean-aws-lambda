@@ -8,11 +8,11 @@ import Lake
 open Lake DSL
 
 package awsLambda where
-  version := v!"0.4.0"
+  version := v!"0.4.1"
   leanOptions := #[⟨`warningAsError, true⟩]
 
 require json from git
-  "https://github.com/paulbutcher/lean-json" @ "v0.2.0"
+  "https://github.com/paulbutcher/lean-json" @ "v0.3.0"
 
 @[default_target]
 lean_lib AwsLambda

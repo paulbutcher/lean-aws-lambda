@@ -6,6 +6,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Json
+public import Leancrypto.Codec.Base64
 public import Middleware
 public import Std.Http.Server
 
@@ -73,7 +74,7 @@ def responseToJson (options : Options) (response : Response Body.Any) :
     let (body, isBase64Encoded) :=
       match String.fromUTF8? bytes with
       | some text => (text, false)
-      | none => (Middleware.Crypto.Base64.encode bytes, true)
+      | none => (Leancrypto.Codec.Base64.encodeString bytes, true)
     pure <| .ok <| Json.mkObj [
       ("statusCode", Json.ofNat response.line.status.toCode.toNat),
       ("headers", Json.mkObj headers),

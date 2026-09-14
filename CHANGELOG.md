@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.4.1] - 2026-09-14
+
+* Update dependencies
+
 ## [0.4.0] - 2026-08-30
 
 * A runtime API response whose `Content-Length` cannot be read is rejected rather than read to the end of the connection

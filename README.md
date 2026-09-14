@@ -65,4 +65,4 @@ AwsLambda.serve init { onFailure := fun f => myTelemetry.record f }
 
 ## Prerequisites
 
-`awsLambda` requires [lean-json](https://github.com/paulbutcher/lean-json). `awsLambda-http` additionally requires [lean-middleware](https://github.com/paulbutcher/lean-middleware).
+`awsLambda` requires [lean-json](https://github.com/paulbutcher/lean-json). `awsLambda-http` additionally requires [lean-middleware](https://github.com/paulbutcher/lean-middleware) and [leancrypto](https://github.com/paulbutcher/leancrypto).

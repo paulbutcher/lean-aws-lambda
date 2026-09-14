@@ -6,6 +6,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Json
+public import Leancrypto.Codec.Base64
 public import Middleware
 public import Std.Http.Server
 
@@ -77,7 +78,7 @@ def ofJson (j : Json) : Except String Event := do
   let raw := orDefault (j.getObjVal? "body" >>= Json.getStr?) ""
   let body ←
     if orDefault (j.getObjVal? "isBase64Encoded" >>= Json.getBool?) false then
-      match Middleware.Crypto.Base64.decode raw with
+      match Leancrypto.Codec.Base64.decodeString raw with
       | some bytes => pure bytes
       | none => throw "isBase64Encoded is set but the body is not valid base64"
     else
