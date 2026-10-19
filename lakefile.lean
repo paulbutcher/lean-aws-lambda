@@ -12,7 +12,7 @@ package awsLambda where
   leanOptions := #[⟨`warningAsError, true⟩]
 
 require json from git
-  "https://github.com/paulbutcher/lean-json" @ "v0.3.0"
+  "https://github.com/paulbutcher/lean-json" @ "v0.3.1"
 
 @[default_target]
 lean_lib AwsLambda
