@@ -17,7 +17,7 @@ package «awsLambda-http» where
 require awsLambda from ".."
 
 require middleware from git
-  "https://github.com/paulbutcher/lean-middleware" @ "v0.17.1"
+  "https://github.com/paulbutcher/lean-middleware" @ "v0.18.0"
 
 require leancrypto from git
   "https://github.com/paulbutcher/leancrypto" @ "v0.4.2"
