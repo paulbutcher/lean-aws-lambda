@@ -11,16 +11,16 @@ open Lake DSL
 queue or a schedule or a bucket notification, needs neither `Std.Http` nor a middleware stack to
 build. Everything HTTP-shaped lives here; the runtime API lives there. -/
 package «awsLambda-http» where
-  version := v!"0.5.0"
+  version := v!"0.6.0"
   leanOptions := #[⟨`warningAsError, true⟩]
 
 require awsLambda from ".."
 
 require middleware from git
-  "https://github.com/paulbutcher/lean-middleware" @ "v0.21.1"
+  "https://github.com/paulbutcher/lean-middleware" @ "v0.22.0"
 
 require leancrypto from git
-  "https://github.com/paulbutcher/leancrypto" @ "v0.4.2"
+  "https://github.com/paulbutcher/leancrypto" @ "v0.5.0"
 
 /-- The module root is `AwsLambdaHttp` rather than `AwsLambda.Http` because Lake resolves a module
 name to exactly one package, and the `AwsLambda.*` tree already belongs to `awsLambda`. The Lean
