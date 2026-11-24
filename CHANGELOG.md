@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.6.1] - 2026-11-24
+
+* Chore: bump dependencies
+
 ## [0.6.0] - 2026-11-24
 
 * Breaking: `awsLambda-http` requires lean-middleware v0.22.0, lean-routing v0.16.0 and leancrypto v0.5.0; move to the same releases
